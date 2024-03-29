@@ -8,12 +8,14 @@ class BufferedVideoWriter(cv2.VideoWriter):
         self.queue=queue.Queue()
         self.fps=fps
         self.maxBufferSize=maxBufferSize
+        self.frameSize=frameSize
     def start(self):
         if self.thread:
             return
         dt=1./self.fps
         def loop():
             t=time.time()
+            self.queue.put((cv2.rectangle(self.frameSize, (0, 0), self.frameSize, (0, 0, 0), -1),t))
             while self.thread or self.queue.qsize():
                 frame,ts=self.queue.get()
                 if frame is None:
