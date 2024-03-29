@@ -114,3 +114,4 @@ snapcraft.yaml
 
 # test video
 *.mp*
+.DS_Store
