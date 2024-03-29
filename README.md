@@ -1,20 +1,20 @@
 # OpenCV BufferedVideoWriter
 
-**OpenCV BufferedVideoWriter** is an extension of the classic `VideoWriter` class in OpenCV. It addresses synchronization issues with frames per second (fps) by providing a buffered approach.
+**OpenCV BufferedVideoWriter** is an extension of the classic `VideoWriter` class in OpenCV. It addresses synchronization issues commonly encountered with `VideoWriter` regarding the correct timing of frames per second (fps) by providing a buffered approach.
+
+## Problem with OpenCV's VideoWriter
+
+The standard `VideoWriter` class in OpenCV doesn't always guarantee accurate timing in video output. This can result in videos where the frame rate is inconsistent or doesn't match the specified fps. This issue becomes more pronounced when writing frames from real-time sources like webcams or when processing and saving large volumes of frames.
+
+## How BufferedVideoWriter solves the Problem
+
+`BufferedVideoWriter` solves this problem by carefully managing the timestamps of frames using a buffered queue system. It automatically repeats or skips frames as needed to ensure adherence to the desired fps. This approach ensures that the resulting video maintains a smooth and consistent frame rate.
 
 ## Features
 
 - Seamless integration with OpenCV.
-- Solves synchronization problems commonly encountered with `VideoWriter` fps settings.
+- Provides accurate timing and synchronization of frames.
 - Easy-to-use: Simply instantiate it like the parent class `VideoWriter`, but use `BufferedVideoWriter`, and provide `start()` and `stop()` methods.
-
-## Installation
-
-You can install `opencv-bufferedvideowriter` via pip:
-
-```bash
-pip install opencv-bufferedvideowriter
-```
 
 ## Usage
 
