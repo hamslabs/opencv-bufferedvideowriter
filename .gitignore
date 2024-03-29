@@ -1,0 +1,116 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# dotenv
+.env
+
+# virtualenv
+venv/
+ENV/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# vscode
+.vscode/
+
+# Sublime text
+.sublime-project
+.sublime-workspace
+
+# Pyre type checker
+.pyre/
+
+# MyPy
+.mypy_cache/
+
+# Profiling data
+.prof
+
+# Pylint
+.pylint.d/
+
+# pyenv
+.python-version
+
+# jupyter lab workspace
+.jupyter/
+
+# IPython
+.ipython/
+
+# pyenv
+.python-version
+
+# env files
+.env*
+
+# Snapcraft
+snapcraft.yaml
+.snapcraft/
+
+# test video
+*.mp*
