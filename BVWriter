@@ -1,0 +1,124 @@
+#!/usr/bin/env python3
+import cv2
+import sys
+import datetime
+import threading,queue,time
+
+class BufferedVideoWriter:
+	def __init__(self,filename,fourcc,fps,frameSize,maxBufferSize=25):
+		self.fourcc=fourcc
+		self.thread=None
+		self.queue=queue.Queue()
+		self.fps=fps
+		self.maxBufferSize=maxBufferSize
+		self.frameSize=frameSize
+		self.filename=filename
+	def start(self):
+		if self.thread:
+			return
+		dt=1./self.fps
+		def loop():
+			writer=cv2.VideoWriter(filename=self.filename,fourcc=self.fourcc,fps=self.fps,frameSize=self.frameSize)
+			t=time.time()
+			self.queue.put((cv2.rectangle(self.frameSize, (0, 0), self.frameSize, (0, 0, 0), -1),t))
+			while self.thread or self.queue.qsize():
+				frame,ts=self.queue.get()
+				if frame is None:
+					break
+				while t<ts:
+					out = cv2.rotate(frame, cv2.ROTATE_180)
+					cv2.imshow('Live Stream', out)
+#					writer.write(frame)
+					t+=dt
+			writer.release()
+		self.thread=threading.Thread(target=loop)
+		self.thread.start()
+	def stop(self):
+		if not self.thread:
+			return
+		self.write(None)
+		t=self.thread
+		self.thread=None
+		t.join()
+		
+	def write(self,image):
+		if self.thread and self.queue.qsize()<self.maxBufferSize:
+			return self.queue.put((image,time.time()))
+		
+   
+
+oldTime = datetime.datetime.now()
+def timestamp():
+	global oldTime
+#	return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+	timeNow = datetime.datetime.now()
+	thing1 = timeNow.strftime('%S.%f')[:-3]
+	thing2 = (timeNow - oldTime).microseconds/ 1000000.0
+	oldTime = timeNow
+	return thing1, thing2
+
+def main():
+	print('test - ', *timestamp(), flush=True)
+	# Initialize the videocapture
+	cv2.namedWindow("Live Stream", cv2.WINDOW_NORMAL)
+	cv2.setWindowProperty("Live Stream", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+	cap = cv2.VideoCapture('udp://192.168.50.50:1935?overrun_nonfatal=1&fifo_size=50000000')
+
+	rec=None
+
+	# Check if the videocapture opened successfully
+	if not cap.isOpened():
+		print("Error: Unable to open the video capture.")
+		return
+
+	# Loop to capture and display frames from the webcam
+	while True:
+		# Capture frame from webcam
+		print('b got frame  - ', *timestamp(), flush=True)
+		ret, frame = cap.read()
+#		print('a got frame  - ', *timestamp(), flush=True)
+		# Check if frame is captured successfully
+		if not ret:
+			print("Error: Unable to capture frame.")
+			break
+		
+		if not rec:
+			h,w,_=frame.shape
+			rec=BufferedVideoWriter("test.mp4",cv2.VideoWriter_fourcc(*'mp4v'), 30, (w, h))
+			rec.start()
+
+		if rec:
+			rec.write(frame)
+		'''
+
+		# Bottom at bottom
+		out = frame
+		# Bottom to right
+		out = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+		# Upside down
+		out = cv2.rotate(frame, cv2.ROTATE_180)
+		# Bottom to left
+		out = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+		'''
+
+		'''
+		out = cv2.rotate(frame, cv2.ROTATE_180)
+
+
+		# Display the frame
+		print('b disp frame - ', *timestamp(), flush=True)
+		cv2.imshow('Live Stream', out)
+		print('a disp frame - ', *timestamp(), flush=True)
+		'''
+
+		# Wait for 1 millisecond for the ESC key to exit
+		if cv2.waitKey(1) == 27:
+			break
+
+	# Release resources
+	cap.release()
+	cv2.destroyAllWindows()
+	rec.stop()
+
+if __name__ == "__main__":
+	main()

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+unclutter -idle 0.01 -root &
+
+nc -l 1935
+
+/home/gwart/bin/opencv-bufferedvideowriter/BVWriter
